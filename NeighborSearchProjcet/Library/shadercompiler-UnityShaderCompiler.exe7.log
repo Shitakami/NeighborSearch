@@ -1,0 +1,33 @@
+Base path: 'C:/Program Files/UnityVersions/2019.4.1f1/Editor/Data', plugins path 'C:/Program Files/UnityVersions/2019.4.1f1/Editor/Data/PlaybackEngines'
+Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  api=4 insize=6599 outsize=1890 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(210): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalclator.compute(222): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6245 outsize=555 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(209): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalclator.compute(221): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6219 outsize=662 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(209): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalclator.compute(221): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6215 outsize=955 ok=1
+Cmd: compileComputeKernel
+  error: 2 plat 4 at ParticleCalclator.compute(38): undeclared identifier 'id'
+  api=4 insize=6219 outsize=0 ok=0
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(210): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalclator.compute(222): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6217 outsize=555 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalculator.compute(211): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalculator.compute(224): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6389 outsize=495 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalculator.compute(186): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalculator.compute(199): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=5716 outsize=803 ok=1
+
+Quitting shader compiler process

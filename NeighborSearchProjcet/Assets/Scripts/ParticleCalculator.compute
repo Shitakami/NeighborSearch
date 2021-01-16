@@ -1,0 +1,221 @@
+﻿#pragma kernel CalcParticlePosition
+#pragma kernel CalcParticleGrid
+#pragma kernel InitializeGridInfo
+#pragma kernel BuildGridIndexRange
+#pragma kernel ParallelBitonic
+#pragma kernel SearchNeighbor
+#pragma kernel RearrengeBuffer
+#pragma kernel CopyBuffer
+
+struct Particle {
+    float3 position;
+    float4 color;
+    float scale;
+    float3 velocity;
+};
+
+
+RWStructuredBuffer<Particle> _Particle;
+RWStructuredBuffer<int2> _ParticleField;   // x:particle id,  y:grid index
+RWStructuredBuffer<int2> _GridInfo;        // x:begin,  y:end
+RWStructuredBuffer<Particle> _SortedParticle;
+
+float _ParticleRange;
+float _DeltaTime;
+
+uint _ParticleCount;
+int _GridRange;
+uint _GridTotalRange;
+float _MinGrid;
+float _GridSize;
+float _SearchRange;
+
+uint _SearchIndex;
+
+int CalcGridIndex(float3 particlePosition) {
+
+    int GridX = (particlePosition.x - _MinGrid) / _GridSize;
+    int GridY = (particlePosition.y - _MinGrid) / _GridSize;
+    int GridZ = (particlePosition.z - _MinGrid) / _GridSize;
+
+    return GridX + GridY*_GridRange + GridZ*_GridRange*_GridRange;
+
+}
+
+int3 CalcGridIndex3(float3 particlePosition) {
+
+    int x = (particlePosition.x - _MinGrid) / _GridSize;
+    int y = (particlePosition.y - _MinGrid) / _GridSize;
+    int z = (particlePosition.z - _MinGrid) / _GridSize;
+
+    return int3(x, y, z);
+
+}
+
+int CalcIndex3ToIndex(int x, int y, int z) {
+
+    return x + y*_GridRange + z*_GridRange*_GridRange;
+
+}
+
+
+// パーティクルの座標をフィールドのindexにする計算
+[numthreads(64, 1, 1)]
+void CalcParticleGrid(uint id : SV_DISPATCHTHREADID) {
+
+    int index = CalcGridIndex(_Particle[id].position);
+    _ParticleField[id] = int2(id, index);
+    
+}
+
+
+// インデックス情報の初期化
+[numthreads(64, 1, 1)]
+void InitializeGridInfo(uint id : SV_DISPATCHTHREADID) {
+
+    if(id >= _GridTotalRange)
+        return;
+
+    _GridInfo[id] = int2(0xffffff, 0xffffff);
+
+}
+
+
+[numthreads(64, 1, 1)]
+void BuildGridIndexRange(uint id : SV_DISPATCHTHREADID) {
+
+    uint prevId = (id == 0) ? _ParticleCount - 1 : id - 1;
+    uint nextId = (id == _ParticleCount - 1) ? 0 : id + 1;
+
+    int index = _ParticleField[id].y;
+    int prevIndex = _ParticleField[prevId].y;
+    int nextIndex = _ParticleField[nextId].y;
+
+    // 前の格子indexと異なればidがbeginとなる
+    if(index != prevIndex) {
+        _GridInfo[index].x = id;
+    }
+
+    // 後の格子indexと異なればid + 1がendとなる
+    if(index != nextIndex) {
+        _GridInfo[index].y = id + 1;
+    }
+
+}
+
+
+// パーティクルの移動
+[numthreads(64, 1, 1)]
+void CalcParticlePosition(uint id : SV_DISPATCHTHREADID) {
+
+    float3 velocity = _Particle[id].velocity;
+    float3 pos = _Particle[id].position + velocity * _DeltaTime;
+
+    if(abs(pos.x) > _ParticleRange) {
+        velocity.x *= -1;
+        pos.x = _Particle[id].position.x + velocity.x * _DeltaTime;
+    }
+
+    if(abs(pos.y) > _ParticleRange) {
+        velocity.y *= -1;
+        pos.y = _Particle[id].position.y + velocity.y * _DeltaTime;
+    }
+
+    if(abs(pos.z) > _ParticleRange) {
+        velocity.z *= -1;
+        pos.z = _Particle[id].position.z + velocity.z * _DeltaTime;
+    }
+
+    _Particle[id].position = pos;
+    _Particle[id].velocity = velocity;
+}
+
+
+int _SwapBit;
+int _UpperBit;
+
+// パーティクルを格子のインデックスでソート
+[numthreads(64, 1, 1)]
+void ParallelBitonic(uint id : SV_DISPATCHTHREADID) {
+
+    int low = id & (_SwapBit - 1);
+    int swapPosX = (id << 1) - low;
+    int swapPosY = swapPosX | _SwapBit;
+
+    bool isUpper = (swapPosX & _UpperBit) == 0;
+
+    if((_ParticleField[swapPosX].y > _ParticleField[swapPosY].y) == isUpper) {
+        int2 temp = _ParticleField[swapPosX];
+        _ParticleField[swapPosX] = _ParticleField[swapPosY];
+        _ParticleField[swapPosY] = temp;
+    }
+
+}
+
+
+[numthreads(64, 1, 1)]
+void RearrengeBuffer(uint id : SV_DISPATCHTHREADID) {
+
+    uint sortedId = _ParticleField[id].x;
+    _SortedParticle[id] = _Particle[sortedId];
+
+}
+
+
+[numthreads(64, 1, 1)]
+void CopyBuffer(uint id : SV_DISPATCHTHREADID) {
+
+    _Particle[id] = _SortedParticle[id];
+
+}
+
+
+[numthreads(64, 1, 1)]
+void SearchNeighbor(uint id : SV_DISPATCHTHREADID) {
+
+    float3 pos = _Particle[id].position;
+    int3 gridIndex3 = CalcGridIndex3(pos);
+    int pX = gridIndex3.x;
+    int pY = gridIndex3.y;
+    int pZ = gridIndex3.z;
+
+    int gridIndex = CalcIndex3ToIndex(pX, pY, pZ);
+
+    _Particle[id].color = float4(0, 0, 0, 1);
+
+    if(_SearchIndex != gridIndex)
+        return;
+
+    // 自身の格子と周りの格子を調べる
+    for(int z = max(pZ - 1, 0); z <= min(pZ + 1, _GridRange - 1); ++z) {
+        for(int y = max(pY - 1, 0); y <= min(pY + 1, _GridRange - 1); ++y) {
+            for(int x = max(pX - 1, 0); x <= min(pX + 1, _GridRange - 1); ++x) {
+
+                int index = CalcIndex3ToIndex(x, y, z);
+                int begin = _GridInfo[index].x;
+                int end = _GridInfo[index].y;
+
+                /* 格子で色をつける */
+                if(_SearchIndex == index) {
+
+                    for(int i = begin; i < end; ++i) {
+                        int pI = _ParticleField[i].x;
+                        _Particle[pI].color = float4(1, 0, 0, 1);
+                    }
+
+                }
+                else {
+
+                    for(int i = begin; i < end; ++i) {
+                        int pI = _ParticleField[i].x;
+                        _Particle[pI].color = float4(0, 1, 1, 1);
+                    }
+
+                }
+
+            }
+        }
+    }
+
+}
+

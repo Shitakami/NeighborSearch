@@ -1,0 +1,86 @@
+Base path: 'C:/Program Files/UnityVersions/2019.4.1f1/Editor/Data', plugins path 'C:/Program Files/UnityVersions/2019.4.1f1/Editor/Data/PlaybackEngines'
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=6586 outsize=6599 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=6599 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=6633 outsize=6646 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=6646 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=6232 outsize=6245 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(210): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalclator.compute(222): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6245 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=6202 outsize=6215 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(209): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalclator.compute(221): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6215 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=6239 outsize=6252 ok=1
+Cmd: compileComputeKernel
+  error: 2 plat 4 at ParticleCalclator.compute(193): syntax error: unexpected token '}'
+  error: 2 plat 4 at ParticleCalclator.compute(200): 'CalcGridIndex3': no matching 1 parameter function
+  error: 2 plat 4 at ParticleCalclator.compute(200): undeclared identifier 'pos'
+  api=4 insize=6252 outsize=0 ok=0
+Cmd: preprocessCompute
+  insize=6240 outsize=6253 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(209): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalclator.compute(221): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6253 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=6206 outsize=6219 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(209): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalclator.compute(221): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6219 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=6238 outsize=6251 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(209): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6251 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=6238 outsize=6251 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(209): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6251 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=6202 outsize=6215 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(209): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalclator.compute(221): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6215 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=6202 outsize=6215 ok=1
+Cmd: preprocessCompute
+  insize=6206 outsize=6219 ok=1
+Cmd: compileComputeKernel
+  error: 2 plat 4 at ParticleCalclator.compute(38): undeclared identifier 'id'
+  api=4 insize=6219 outsize=0 ok=0
+Cmd: preprocessCompute
+  insize=6204 outsize=6217 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalclator.compute(210): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalclator.compute(222): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6217 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=6202 outsize=6215 ok=1
+Cmd: preprocessCompute
+  insize=6202 outsize=6215 ok=1
+Cmd: preprocessCompute
+  insize=6376 outsize=6389 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalculator.compute(211): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalculator.compute(224): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=6389 outsize=1050 ok=1
+Cmd: preprocessCompute
+  insize=5703 outsize=5716 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at ParticleCalculator.compute(186): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at ParticleCalculator.compute(199): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=5716 outsize=1050 ok=1
